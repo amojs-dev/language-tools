@@ -2,7 +2,7 @@
   "name": "amojs",
   "displayName": "AmoJS",
   "description": "HTML syntax highlighting and IntelliSense inside AmoJS html`` templates, plus build and eject commands.",
-  "version": "0.1.0-dev",
+  "version": "0.2.0-dev",
   "publisher": "amojs-dev",
   "private": true,
   "license": "MIT",
@@ -28,6 +28,13 @@
     "reactive"
   ],
   "main": "./dist/extension.js",
+  "comment:activation": "onLanguage is required: commands activate the extension by themselves, but diagnostics must be running BEFORE the user does anything, so the extension has to wake when a JS/TS file opens. Grammars and snippets are declarative and need no activation at all.",
+  "activationEvents": [
+    "onLanguage:javascript",
+    "onLanguage:javascriptreact",
+    "onLanguage:typescript",
+    "onLanguage:typescriptreact"
+  ],
   "contributes": {
     "grammars": [
       {
@@ -89,6 +96,11 @@
   },
   "scripts": {
     "build": "esbuild src/extension.ts --bundle --platform=node --format=cjs --target=node20 --external:vscode --outfile=dist/extension.js",
-    "package": "vsce package --no-dependencies"
+    "build:prod": "pnpm build --minify",
+    "package": "pnpm build:prod && vsce package --no-dependencies"
+  },
+  "comment:deps": "amojs-compiler is a devDependency, not a dependency, because esbuild BUNDLES it into dist/extension.js — the shipped .vsix carries no node_modules. The `link:` protocol is TEMPORARY: AmoJS is unpublished, so there is no version to depend on yet. At publish time this becomes a normal semver range. The link requires the AmoJS checkout to be built (its exports map points at dist/).",
+  "devDependencies": {
+    "amojs-compiler": "link:../../../amojs/packages/compiler"
   }
 }

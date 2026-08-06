@@ -30,7 +30,11 @@ importers:
         specifier: ^9.2.0
         version: 9.3.2
 
-  packages/vscode: {}
+  packages/vscode:
+    devDependencies:
+      amojs-compiler:
+        specifier: link:../../../amojs/packages/compiler
+        version: link:../../../amojs/packages/compiler
 
 packages:
 

@@ -24,6 +24,25 @@ Holes are registered as embedded JavaScript, so completion works inside
 `amocomputed`, `amoeach`, `amoif`, `amoref`, `amoonmount`, `amocleanup`,
 `amoroot`, `amomount`, `amoeffect`, `amoimport`.
 
+**Tells you when a template is wrong.** AmoJS's parser accepts a strict subset
+and refuses to guess, so the errors are specific and they appear where the
+problem is:
+
+| you wrote | you get |
+|---|---|
+| `html\`<div><p>hi</p>\`` | `unclosed <div>` on the `<div>` |
+| `html\`<div/>\`` | self-closing is only valid on void elements, on the `/>` |
+| `html\`<circle r=${n}/>\`` | the unquoted-hole trap, on the `/>` |
+| `html\`<div ${x}>\`` | a hole may only be a child or a full attribute value, on the `${x}` |
+
+This is the part a lit-html plugin cannot do: the browser parses those templates
+permissively, so there is nothing to report. Here the same parser that runs
+`amo build` is the one underlining your code, which means the editor and the
+build cannot disagree.
+
+Files that do not import `amojs` are left alone entirely, and JavaScript syntax
+errors are left to the built-in JS/TS support rather than reported twice.
+
 **Two commands** (Command Palette): **AmoJS: Build** and **AmoJS: Eject**. Both
 run the `amo` CLI as a task in your workspace folder.
 
@@ -56,9 +75,19 @@ templates.
   same treatment. The AmoJS *compiler* is import-aware and unaffected; only the
   colouring is generous. `obj.html`` ` is excluded, since a member expression is
   never an AmoJS template.
-- Template diagnostics are not here yet. AmoJS's parser produces precise
-  strict-subset errors (`unclosed <div>`, `an attribute hole must be the entire
-  attribute value`) and surfacing them inline is the next milestone.
+- **One error per template at a time.** The parser stops at its first failure,
+  so a template with two problems shows the second only once the first is fixed.
+  Separate templates are reported independently.
+- **An escaped character makes the range coarser.** The parser reads the cooked
+  string, where `` \` `` is one character while the source spends two, so precise
+  placement would drift. When a static part contains an escape the whole part is
+  underlined and the message says "somewhere in this part" rather than pointing
+  confidently at the wrong column.
+- **The bundled parser can differ from the one your project builds with.** The
+  extension carries its own copy of the AmoJS parser, so if your project pins an
+  older or newer AmoJS, the editor and `amo build` could in principle disagree.
+  Resolving your project's own installed parser first is the fix, and it lands
+  before the Marketplace release.
 
 ## Status
 

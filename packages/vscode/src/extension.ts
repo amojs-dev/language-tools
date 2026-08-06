@@ -1,21 +1,21 @@
 /**
  * The AmoJS VS Code extension.
  *
- * Phase 1 is deliberately almost empty, and that is the design: the syntax
- * highlighting is a declarative TextMate injection (`syntaxes/`), the snippets
- * are JSON, and neither needs a line of code. What is left is the two CLI
- * commands.
+ * Most of what this extension does needs no code: the syntax highlighting is a
+ * declarative TextMate injection (`syntaxes/`) and the snippets are JSON. What
+ * is left is the two CLI commands and the template diagnostics.
  *
  * There is no language server here and there will not be one. An AmoJS file is
  * standard JavaScript, so hover, go-to-definition, rename and type-checking are
  * already provided by the built-in JS/TS support. The only gap is inside the
- * template string, and that gap is a pure function over the document — Phase 2
- * fills it by calling `diagnose()` from `amojs-compiler`.
+ * template string, and filling it is a pure function over the document — see
+ * `diagnostics.ts`, which delegates every judgement to the real compiler.
  */
 
 import * as vscode from 'vscode';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
+import { registerDiagnostics } from './diagnostics.js';
 
 type Mode = 'build' | 'eject';
 
@@ -24,6 +24,7 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.commands.registerCommand('amojs.build', () => runCli('build')),
     vscode.commands.registerCommand('amojs.eject', () => runCli('eject')),
   );
+  registerDiagnostics(context);
 }
 
 export function deactivate(): void {
