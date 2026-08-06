@@ -1,0 +1,24 @@
+{
+  "name": "amojs-language-tools",
+  "private": true,
+  "type": "module",
+  "description": "Editor tooling for AmoJS — the VS Code extension and the editor-agnostic analyzer.",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "pnpm -r run build",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "check": "pnpm build && tsc -p ."
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.2",
+    "@types/vscode": "^1.85.0",
+    "esbuild": "^0.28.1",
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.10",
+    "vscode-oniguruma": "^2.0.1",
+    "vscode-textmate": "^9.2.0"
+  }
+}

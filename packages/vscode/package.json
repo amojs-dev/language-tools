@@ -1,0 +1,94 @@
+{
+  "name": "amojs",
+  "displayName": "AmoJS",
+  "description": "HTML syntax highlighting and IntelliSense inside AmoJS html`` templates, plus build and eject commands.",
+  "version": "0.1.0-dev",
+  "publisher": "amojs-dev",
+  "private": true,
+  "license": "MIT",
+  "comment:main": "No \"type\": \"module\" on purpose — VS Code require()s the extension entry, so the bundle is CommonJS. An `icon` field is deliberately absent until an icon exists: a dangling path fails `vsce package`.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/amojs-dev/language-tools.git",
+    "directory": "packages/vscode"
+  },
+  "homepage": "https://amojs.dev",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Snippets"
+  ],
+  "keywords": [
+    "amojs",
+    "signals",
+    "tagged template",
+    "html",
+    "reactive"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "grammars": [
+      {
+        "path": "./syntaxes/amojs-html.injection.json",
+        "scopeName": "inline.amojs.html",
+        "injectTo": [
+          "source.js",
+          "source.ts",
+          "source.js.jsx",
+          "source.jsx",
+          "source.tsx"
+        ],
+        "embeddedLanguages": {
+          "meta.embedded.block.html": "html",
+          "meta.template.expression.amojs": "javascript"
+        }
+      }
+    ],
+    "snippets": [
+      { "language": "javascript", "path": "./snippets/amojs.code-snippets" },
+      { "language": "typescript", "path": "./snippets/amojs.code-snippets" },
+      { "language": "javascriptreact", "path": "./snippets/amojs.code-snippets" },
+      { "language": "typescriptreact", "path": "./snippets/amojs.code-snippets" }
+    ],
+    "commands": [
+      { "command": "amojs.build", "title": "AmoJS: Build", "category": "AmoJS" },
+      { "command": "amojs.eject", "title": "AmoJS: Eject", "category": "AmoJS" }
+    ],
+    "configuration": {
+      "title": "AmoJS",
+      "properties": {
+        "amojs.cli.path": {
+          "type": "string",
+          "default": "amo",
+          "markdownDescription": "How to invoke the AmoJS CLI. Leave as `amo` when it is on your PATH; otherwise give an absolute path, or something like `pnpm amo`."
+        },
+        "amojs.build.srcDir": {
+          "type": "string",
+          "default": "src",
+          "description": "Source directory passed to `amo build` / `amo eject`, relative to the workspace folder."
+        },
+        "amojs.build.outDir": {
+          "type": "string",
+          "default": "dist",
+          "description": "Output directory passed to `amo build`, relative to the workspace folder."
+        },
+        "amojs.eject.outDir": {
+          "type": "string",
+          "default": "ejected",
+          "description": "Output directory passed to `amo eject`, relative to the workspace folder."
+        },
+        "amojs.eject.runtimeDir": {
+          "type": "string",
+          "default": "amo-runtime",
+          "description": "Directory name the ejected runtime is written into, inside the eject output."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "esbuild src/extension.ts --bundle --platform=node --format=cjs --target=node20 --external:vscode --outfile=dist/extension.js",
+    "package": "vsce package --no-dependencies"
+  }
+}

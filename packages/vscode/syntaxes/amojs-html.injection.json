@@ -1,0 +1,109 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "AmoJS html template",
+  "scopeName": "inline.amojs.html",
+  "comment": "Injects HTML into AmoJS html`` tagged templates. `L:` makes this run BEFORE the host grammar's own template-literal rule, which is the whole reason the injection wins; `-comment -string` keeps it from firing inside a comment or an ordinary quoted string that merely contains the text html`.",
+  "injectionSelector": "L:source.js -comment -string, L:source.ts -comment -string, L:source.js.jsx -comment -string, L:source.jsx -comment -string, L:source.tsx -comment -string",
+  "patterns": [{ "include": "#template" }],
+  "repository": {
+    "template": {
+      "comment": "A TextMate grammar cannot do import analysis, so the `html` tag is matched by name. A foreign html`` (lit-html, a local helper) is highlighted too — accepted: locked rule #8 governs the COMPILER, not the highlighter. The lookbehind rejects `obj.html``, which is never ours.",
+      "begin": "(?<![$\\w.])(html)\\s*(`)",
+      "beginCaptures": {
+        "1": { "name": "entity.name.function.tagged-template.amojs" },
+        "2": { "name": "punctuation.definition.string.template.begin.js" }
+      },
+      "end": "(`)",
+      "endCaptures": {
+        "1": { "name": "punctuation.definition.string.template.end.js" }
+      },
+      "contentName": "meta.embedded.block.html",
+      "patterns": [
+        { "include": "#escape" },
+        { "include": "#hole" },
+        { "include": "#tag" },
+        { "include": "text.html.basic" }
+      ]
+    },
+
+    "escape": {
+      "comment": "Must come first: an escaped backtick would otherwise end the template early.",
+      "name": "constant.character.escape.js",
+      "match": "\\\\."
+    },
+
+    "hole": {
+      "comment": "A ${…} hole is JavaScript again. The name is what package.json's embeddedLanguages maps back to javascript, which is what gives completion inside a hole. `include: source.js` is how the host TS grammar does balanced braces, so an object literal consumes its own `}` before the end pattern is tried.",
+      "name": "meta.template.expression.amojs",
+      "begin": "\\$\\{",
+      "beginCaptures": {
+        "0": { "name": "punctuation.definition.template-expression.begin.js" }
+      },
+      "end": "\\}",
+      "endCaptures": {
+        "0": { "name": "punctuation.definition.template-expression.end.js" }
+      },
+      "patterns": [{ "include": "source.js" }]
+    },
+
+    "tag": {
+      "comment": "We parse tags OURSELVES rather than handing them to text.html.basic, and this is load-bearing. Once the HTML grammar enters a tag it owns that region, and neither an in-grammar `injections` block nor a second grammar injected into text.html.basic gets consulted there (verified against vscode-textmate). The result was that `class=${x}` came out as a plain HTML string: no JS colouring, and — worse — no embedded-language mapping, so no completion inside the hole. Owning the tag is what makes an attribute hole a first-class hole. Tag CONTENT is still text.html.basic's job.",
+      "name": "meta.tag.amojs.html",
+      "begin": "(</?)([a-zA-Z][a-zA-Z0-9:._-]*)",
+      "beginCaptures": {
+        "1": { "name": "punctuation.definition.tag.begin.html" },
+        "2": { "name": "entity.name.tag.html" }
+      },
+      "end": "(/?>)",
+      "endCaptures": {
+        "1": { "name": "punctuation.definition.tag.end.html" }
+      },
+      "patterns": [
+        { "include": "#hole" },
+        { "include": "#attribute" }
+      ]
+    },
+
+    "attribute": {
+      "comment": "Name first, then let #attribute-value own everything after the `=` — so a static value is a string and a hole is an expression, instead of both being mistaken for another attribute name.",
+      "begin": "([^\\s\"'<>/=`]+)",
+      "beginCaptures": {
+        "1": { "name": "entity.other.attribute-name.html" }
+      },
+      "end": "(?=[\\s/>])",
+      "patterns": [{ "include": "#attribute-value" }]
+    },
+
+    "attribute-value": {
+      "begin": "(=)\\s*",
+      "beginCaptures": {
+        "1": { "name": "punctuation.separator.key-value.html" }
+      },
+      "end": "(?=[\\s/>])",
+      "patterns": [
+        { "include": "#hole" },
+        { "include": "#quoted-value" },
+        { "include": "#unquoted-value" }
+      ]
+    },
+
+    "quoted-value": {
+      "comment": "A quoted value may hold a hole — `r=\"${n}\"`, which is also the spelling AmoJS requires when the hole is glued to `/>`.",
+      "begin": "([\"'])",
+      "beginCaptures": {
+        "1": { "name": "punctuation.definition.string.begin.html" }
+      },
+      "end": "\\1",
+      "endCaptures": {
+        "0": { "name": "punctuation.definition.string.end.html" }
+      },
+      "name": "string.quoted.html",
+      "patterns": [{ "include": "#hole" }]
+    },
+
+    "unquoted-value": {
+      "name": "string.unquoted.html",
+      "match": "[^\\s\"'<>`]+"
+    }
+  }
+}

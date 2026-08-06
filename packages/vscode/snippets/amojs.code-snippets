@@ -1,0 +1,72 @@
+{
+  "AmoJS: import": {
+    "prefix": "amoimport",
+    "body": ["import { ${1:signal, html, mount} } from 'amojs';"],
+    "description": "Import from amojs — the statement the compiler uses to find your file"
+  },
+  "AmoJS: component": {
+    "prefix": "amocomp",
+    "body": [
+      "export function ${1:Component}(${2:props}) {",
+      "  return html`<${3:div}>$0</${3:div}>`;",
+      "}"
+    ],
+    "description": "A component is a plain function returning a Node — there is no component API"
+  },
+  "AmoJS: signal": {
+    "prefix": "amosignal",
+    "body": ["const ${1:count} = signal(${2:0});"],
+    "description": "Reactive value — read and write through .value"
+  },
+  "AmoJS: computed": {
+    "prefix": "amocomputed",
+    "body": ["const ${1:double} = computed(() => ${2:count.value * 2});"],
+    "description": "Lazy, cached derivation with an equality cutoff"
+  },
+  "AmoJS: effect": {
+    "prefix": "amoeffect",
+    "body": ["effect(() => {", "  $0", "});"],
+    "description": "Run now, re-run whenever anything read inside changes"
+  },
+  "AmoJS: mount": {
+    "prefix": "amomount",
+    "body": ["mount(${1:App}, ${2:document.body});"],
+    "description": "Instantiate a component and append it"
+  },
+  "AmoJS: keyed list": {
+    "prefix": "amoeach",
+    "body": [
+      "each(${1:items}, (${2:item}) => ${2:item}.${3:id}, (${2:item}) => html`<li>\\${${2:item}.${4:label}}</li>`)"
+    ],
+    "description": "Keyed list — the second argument IS the key function, and it is mandatory"
+  },
+  "AmoJS: conditional hole": {
+    "prefix": "amoif",
+    "body": ["\\${() => (${1:open}.value ? html`<${2:p}>$0</${2:p}>` : '')}"],
+    "description": "A conditional is just a function hole returning a template"
+  },
+  "AmoJS: onCleanup": {
+    "prefix": "amocleanup",
+    "body": ["onCleanup(() => {", "  $0", "});"],
+    "description": "Teardown for the current scope — before every re-run and on dispose"
+  },
+  "AmoJS: onMount": {
+    "prefix": "amoonmount",
+    "body": ["onMount(() => {", "  $0", "});"],
+    "description": "Runs once the nodes are live — for measuring, focus, or observers"
+  },
+  "AmoJS: ref + onMount": {
+    "prefix": "amoref",
+    "body": [
+      "let ${1:el} = null;",
+      "const node = html`<${2:input} ref=\\${(n) => (${1:el} = n)}>`;",
+      "onMount(() => ${1:el}.${3:focus}());"
+    ],
+    "description": "ref hands you the element while still detached; onMount is when it is live"
+  },
+  "AmoJS: root scope": {
+    "prefix": "amoroot",
+    "body": ["const dispose = root((dispose) => {", "  $0", "  return dispose;", "});"],
+    "description": "A detached ownership scope you dispose yourself"
+  }
+}

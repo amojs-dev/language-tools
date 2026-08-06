@@ -1,0 +1,9 @@
+# Everything the Marketplace package does not need.
+# The bundle in dist/ is the shipped code; src/ and tests are not.
+src/**
+test/**
+tsconfig.json
+.vscodeignore
+node_modules/**
+**/*.map
+**/*.ts
