@@ -2,9 +2,8 @@
   "name": "amojs",
   "displayName": "AmoJS",
   "description": "HTML syntax highlighting and IntelliSense inside AmoJS html`` templates, plus build and eject commands.",
-  "version": "0.2.1-dev",
+  "version": "0.3.0",
   "publisher": "amojs-dev",
-  "private": true,
   "license": "MIT",
   "comment:main": "No \"type\": \"module\" on purpose — VS Code require()s the extension entry, so the bundle is CommonJS. An `icon` field is deliberately absent until an icon exists: a dangling path fails `vsce package`.",
   "repository": {
@@ -117,10 +116,12 @@
   "scripts": {
     "build": "esbuild src/extension.ts --bundle --platform=node --format=cjs --target=node20 --external:vscode --outfile=dist/extension.js",
     "build:prod": "pnpm build --minify",
-    "package": "pnpm build:prod && vsce package --no-dependencies"
+    "package": "pnpm build:prod && npx --yes @vscode/vsce package --no-dependencies",
+    "release": "pnpm build:prod && npx --yes @vscode/vsce publish --no-dependencies"
   },
   "comment:deps": "@amojs.dev/compiler is a devDependency, not a dependency, because esbuild BUNDLES it into dist/extension.js — the shipped .vsix carries no node_modules.",
   "devDependencies": {
-    "@amojs.dev/compiler": "^0.7.1"
-  }
+    "@amojs.dev/compiler": "^0.7.2"
+  },
+  "comment:vsce": "vsce is run through npx, not installed: it pulls keytar and vsce-sign, native modules that need build scripts and are only ever needed at release time."
 }

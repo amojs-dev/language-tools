@@ -4,6 +4,8 @@ packages:
 allowBuilds:
   esbuild: true
 
+# pnpm refuses freshly-published versions by default (supply-chain guard). These
+# are ours, published minutes before they are consumed here, so they are exempt.
 minimumReleaseAgeExclude:
-  - '@amojs.dev/compiler@0.7.1'
+  - '@amojs.dev/compiler@0.7.2'
   - '@amojs.dev/core@0.7.0'

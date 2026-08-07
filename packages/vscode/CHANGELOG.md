@@ -1,6 +1,17 @@
 # Changelog
 
-## 0.2.0-dev — unreleased
+## 0.3.0 — first Marketplace release
+
+- Tracks the package rename: the compiler is now `@amojs.dev/compiler`, and the
+  specifier the extension looks for is `@amojs.dev/core`. Snippets and the
+  diagnostics fixtures moved with it.
+- Depends on the **published** `@amojs.dev/compiler`, not a local checkout, so
+  the shipped bundle is reproducible.
+- Verified in the packaged `.vsix`: the parser and acorn are bundled, while the
+  compiler's filesystem code (`build`, `eject`) is absent — the narrow
+  `diagnose` entry does what it was built for.
+
+## 0.2.0 — unreleased (folded into 0.3.0)
 
 Template diagnostics — the axis where AmoJS can beat a lit-html plugin rather
 than tie it.
@@ -17,7 +28,7 @@ than tie it.
 - Analysis is imported through the narrow `@amojs.dev/compiler/diagnose` entry, so the
   package's filesystem code (`build`, `eject`) never reaches the extension.
 
-## 0.1.0-dev — unreleased
+## 0.1.0 — unreleased (folded into 0.3.0)
 
 First slice: everything that needs no coupling to the AmoJS compiler.
 
