@@ -3,3 +3,7 @@ packages:
 
 allowBuilds:
   esbuild: true
+
+minimumReleaseAgeExclude:
+  - '@amojs.dev/compiler@0.7.1'
+  - '@amojs.dev/core@0.7.0'

@@ -39,7 +39,7 @@ server is consumed by other editors over LSP. We are deliberately not building
 one.
 
 What actually remains here is thin. The analysis that matters — turning a
-template error into a source range — lives in `amojs-compiler`, where AmoJS's
+template error into a source range — lives in `@amojs.dev/compiler`, where AmoJS's
 own test suite covers it and it cannot drift. The extension side is the glue that
 converts offsets into `vscode.Range`. Glue is not a package.
 
@@ -48,7 +48,7 @@ rewrite:
 
 1. **Analysis code imports nothing from `vscode`** — enforced by a test, not by
    discipline.
-2. **It wraps `amojs-compiler`; it never re-implements parsing.** Two tokenizers
+2. **It wraps `@amojs.dev/compiler`; it never re-implements parsing.** Two tokenizers
    that disagree is the worst outcome available — the editor calls a template
    fine and the build fails, or the reverse.
 

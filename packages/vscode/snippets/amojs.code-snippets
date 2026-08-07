@@ -1,8 +1,8 @@
 {
   "AmoJS: import": {
     "prefix": "amoimport",
-    "body": ["import { ${1:signal, html, mount} } from 'amojs';"],
-    "description": "Import from amojs — the statement the compiler uses to find your file"
+    "body": ["import { ${1:signal, html, mount} } from '@amojs.dev/core';"],
+    "description": "Import from @amojs.dev/core — the statement the compiler uses to find your file"
   },
   "AmoJS: component": {
     "prefix": "amocomp",

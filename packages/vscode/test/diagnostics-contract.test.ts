@@ -14,7 +14,7 @@ import { test, expect } from 'vitest';
 import { readFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { diagnose } from 'amojs-compiler/diagnose';
+import { diagnose } from '@amojs.dev/compiler/diagnose';
 
 const HERE = import.meta.url.startsWith('file:')
   ? dirname(fileURLToPath(import.meta.url))
@@ -26,7 +26,7 @@ test('diagnostics.ts delegates: it never decides what is legal itself', async ()
   const src = await read('src/diagnostics.ts');
 
   // the one source of truth, imported through the narrow entry
-  expect(src).toContain("from 'amojs-compiler/diagnose'");
+  expect(src).toContain("from '@amojs.dev/compiler/diagnose'");
 
   // no second opinion about template syntax living here
   for (const smell of ['parseTemplate', 'unclosed', 'new RegExp', 'indexOf(\'<\')']) {
@@ -37,7 +37,7 @@ test('diagnostics.ts delegates: it never decides what is legal itself', async ()
 test('the analysis import is the narrow entry, not the package root', async () => {
   const src = await read('src/diagnostics.ts');
   // the root pulls in build/eject — filesystem code an editor must not carry
-  expect(src).not.toMatch(/from 'amojs-compiler'/);
+  expect(src).not.toContain("from '@amojs.dev/compiler'");
 });
 
 test('stale problems cannot outlive a closed document', async () => {
@@ -58,7 +58,7 @@ test('the extension activates on JS/TS files, not only on a command', async () =
    breaking change in the compiler shows up here and not in a bug report. */
 
 test('the compiler entry reports a broken template and ignores a clean one', () => {
-  const IMPORT = "import { html } from 'amojs';\n";
+  const IMPORT = "import { html } from '@amojs.dev/core';\n";
   expect(diagnose(`${IMPORT}const el = html\`<p>hi</p>\`;`)).toEqual([]);
 
   const broken = diagnose(`${IMPORT}const el = html\`<div><p>hi</p>\`;`);
@@ -73,7 +73,7 @@ test('a file with no amojs import is left alone, and so is invalid JS', () => {
 });
 
 test('offsets fall inside the document, so positionAt can never throw', () => {
-  const src = "import { html } from 'amojs';\nconst el = html`<div><span>x</div>`;";
+  const src = "import { html } from '@amojs.dev/core';\nconst el = html`<div><span>x</div>`;";
   for (const d of diagnose(src)) {
     expect(d.start).toBeGreaterThanOrEqual(0);
     expect(d.end).toBeGreaterThan(d.start); // never zero-width: nothing to see

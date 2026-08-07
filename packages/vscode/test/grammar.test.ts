@@ -111,7 +111,7 @@ describe.skipIf(!editorBase)('html`` injection grammar', () => {
   });
 
   test('the injection wins over the host template-literal rule', () => {
-    const toks = tokenize("import { html } from 'amojs';\nconst el = html`<p>hi</p>`;");
+    const toks = tokenize("import { html } from '@amojs.dev/core';\nconst el = html`<p>hi</p>`;");
     expect(pick(toks, 'meta.import')).not.toHaveLength(0); // real JS is running
     expect(textOf(pick(toks, EMBEDDED))).toBe('<p>hi</p>'); // and we still won
   });
