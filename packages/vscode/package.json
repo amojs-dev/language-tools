@@ -2,10 +2,15 @@
   "name": "amojs",
   "displayName": "AmoJS",
   "description": "HTML syntax highlighting and IntelliSense inside AmoJS html`` templates, plus build and eject commands.",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "publisher": "amojs-dev",
   "license": "MIT",
-  "comment:main": "No \"type\": \"module\" on purpose — VS Code require()s the extension entry, so the bundle is CommonJS. An `icon` field is deliberately absent until an icon exists: a dangling path fails `vsce package`.",
+  "icon": "icon.png",
+  "galleryBanner": {
+    "color": "#0B0C11",
+    "theme": "dark"
+  },
+  "comment:main": "No \"type\": \"module\" on purpose — VS Code require()s the extension entry, so the bundle is CommonJS.",
   "repository": {
     "type": "git",
     "url": "https://github.com/amojs-dev/language-tools.git",
@@ -90,6 +95,17 @@
           "default": "amo",
           "markdownDescription": "How to invoke the AmoJS CLI. Leave as `amo` when it is on your PATH; otherwise give an absolute path, or something like `pnpm amo`."
         },
+        "amojs.build.mode": {
+          "type": "string",
+          "enum": ["csr", "ssr", "ssg"],
+          "default": "csr",
+          "enumDescriptions": [
+            "Compile for the browser (the default).",
+            "Compile pages to strings for rendering per request on node; islands/ is built for the browser in the same run.",
+            "Render pages under src/pages/ to static .html at build time; islands/ is built for the browser in the same run."
+          ],
+          "markdownDescription": "Which mode `amo build` runs in. `ssr` and `ssg` also compile `src/islands/` for the browser automatically."
+        },
         "amojs.build.srcDir": {
           "type": "string",
           "default": "src",
@@ -121,7 +137,7 @@
   },
   "comment:deps": "@amojs.dev/compiler is a devDependency, not a dependency, because esbuild BUNDLES it into dist/extension.js — the shipped .vsix carries no node_modules.",
   "devDependencies": {
-    "@amojs.dev/compiler": "^0.7.2"
+    "@amojs.dev/compiler": "^0.10.0"
   },
   "comment:vsce": "vsce is run through npx, not installed: it pulls keytar and vsce-sign, native modules that need build scripts and are only ever needed at release time."
 }

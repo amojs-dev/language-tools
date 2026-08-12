@@ -63,6 +63,7 @@ templates.
 | setting | default | what it does |
 |---|---|---|
 | `amojs.cli.path` | `amo` | how to invoke the CLI; may include arguments, e.g. `pnpm amo` |
+| `amojs.build.mode` | `csr` | `csr` for the browser, `ssr` for per-request rendering, `ssg` for static pages. `ssr`/`ssg` also build `src/islands/` for the browser |
 | `amojs.build.srcDir` | `src` | source directory passed to build and eject |
 | `amojs.build.outDir` | `dist` | output directory for **build** |
 | `amojs.eject.outDir` | `ejected` | output directory for **eject** |
@@ -84,10 +85,14 @@ templates.
   underlined and the message says "somewhere in this part" rather than pointing
   confidently at the wrong column.
 - **The bundled parser can differ from the one your project builds with.** The
-  extension carries its own copy of the AmoJS parser, so if your project pins an
-  older or newer AmoJS, the editor and `amo build` could in principle disagree.
-  Resolving your project's own installed parser first is the fix, and it lands
-  before the Marketplace release.
+  extension carries its own copy of the AmoJS parser (currently
+  `@amojs.dev/compiler` 0.10), so if your project pins a different version, the
+  editor and `amo build` can in principle disagree. Resolving your project's own
+  installed parser first is the fix; it is not built yet.
+- **A dynamic `` <title>${…}</title> `` is not flagged either way.** It compiles
+  for the server target and is rejected for the browser one, and nothing in a
+  file says which target it is built for — so the editor stays silent and lets
+  the build report it, rather than underlining correct server code.
 
 ## Status
 

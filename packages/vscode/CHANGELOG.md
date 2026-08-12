@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.4.0
+
+- **Fixes the Build command against AmoJS 0.10.** `amo build` became one verb
+  with three modes (`csr | ssr | ssg`) and `src/` → `dist/` defaults, so the old
+  `amo build <src> <out>` line the extension emitted is now an error. It emits
+  the shortest correct command instead: plain `amo build` at the defaults.
+- **New setting `amojs.build.mode`** (`csr` · `ssr` · `ssg`). Server-rendered and
+  static projects can use the Build command now, not only client-side ones.
+- Tracks `@amojs.dev/compiler@^0.10.0`, so the editor's diagnostics match the
+  current parser — raw-text elements (`<textarea>`, `<script>`, `<style>`,
+  `<title>`) carrying static content are accepted, and a hole inside one is
+  reported with the cure.
+- The extension has an icon.
+
+
 ## 0.3.0 — first Marketplace release
 
 - Tracks the package rename: the compiler is now `@amojs.dev/compiler`, and the

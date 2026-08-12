@@ -17,7 +17,7 @@ import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { registerDiagnostics } from './diagnostics.js';
 
-type Mode = 'build' | 'eject';
+type Command = 'build' | 'eject';
 
 export function activate(context: vscode.ExtensionContext): void {
   context.subscriptions.push(
@@ -38,7 +38,7 @@ export function deactivate(): void {
  * already knows how to show, re-run, and cancel — and a problem matcher can be
  * attached later without changing the call site.
  */
-async function runCli(mode: Mode): Promise<void> {
+async function runCli(command: Command): Promise<void> {
   const folder = await pickFolder();
   if (!folder) return;
 
@@ -46,7 +46,7 @@ async function runCli(mode: Mode): Promise<void> {
   const cli = (cfg.get<string>('cli.path') ?? 'amo').trim() || 'amo';
   const src = cfg.get<string>('build.srcDir') ?? 'src';
   const out =
-    mode === 'build'
+    command === 'build'
       ? (cfg.get<string>('build.outDir') ?? 'dist')
       : (cfg.get<string>('eject.outDir') ?? 'ejected');
 
@@ -64,8 +64,18 @@ async function runCli(mode: Mode): Promise<void> {
     return;
   }
 
-  const args = [mode, quote(src), quote(out)];
-  if (mode === 'eject') {
+  const args: string[] = [command];
+  if (command === 'build') {
+    // `amo build` is one verb with three modes and src/ → dist/ defaults, so
+    // emit the SHORTEST correct line — the one a person would have typed.
+    // The mode is mandatory as soon as paths are passed: two bare positionals
+    // are an error, not a src/out pair.
+    const mode = cfg.get<string>('build.mode') ?? 'csr';
+    const atDefaults = src === 'src' && out === 'dist';
+    if (!atDefaults) args.push(mode, quote(src), quote(out));
+    else if (mode !== 'csr') args.push(mode);
+  } else {
+    args.push(quote(src), quote(out));
     const runtime = (cfg.get<string>('eject.runtimeDir') ?? '').trim();
     // only pass the flag when it differs from the CLI's own default, so the
     // command line stays the one a person would have typed
@@ -73,9 +83,9 @@ async function runCli(mode: Mode): Promise<void> {
   }
 
   const task = new vscode.Task(
-    { type: 'amojs', mode },
+    { type: 'amojs', mode: command },
     folder,
-    `amo ${mode}`,
+    `amo ${command}`,
     'amojs',
     // the CLI string may itself carry arguments ("pnpm amo"), so it is passed
     // through the shell rather than as a single executable name
