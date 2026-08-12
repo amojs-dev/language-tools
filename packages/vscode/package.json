@@ -2,7 +2,7 @@
   "name": "amojs",
   "displayName": "AmoJS",
   "description": "HTML syntax highlighting and IntelliSense inside AmoJS html`` templates, plus build and eject commands.",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "publisher": "amojs-dev",
   "license": "MIT",
   "icon": "icon.png",

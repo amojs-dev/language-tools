@@ -40,8 +40,9 @@ permissively, so there is nothing to report. Here the same parser that runs
 `amo build` is the one underlining your code, which means the editor and the
 build cannot disagree.
 
-Files that do not import `amojs` are left alone entirely, and JavaScript syntax
-errors are left to the built-in JS/TS support rather than reported twice.
+Files that do not import from `@amojs.dev/core` are left alone entirely, and
+JavaScript syntax errors are left to the built-in JS/TS support rather than
+reported twice.
 
 **Two commands** (Command Palette): **AmoJS: Build** and **AmoJS: Eject**. Both
 run the `amo` CLI as a task in your workspace folder.
@@ -96,5 +97,13 @@ templates.
 
 ## Status
 
-Pre-release (`0.1.0-dev`), not on the Marketplace yet.
+Released. The extension bundles `@amojs.dev/compiler` 0.10 — the same parser
+`amo build` runs — so the editor and the build agree by construction.
+
+AmoJS itself is **pre-1.0**:
+[`@amojs.dev/core`](https://www.npmjs.com/package/@amojs.dev/core) is at 0.8, so
+the template language can still change. When it does, this extension follows in a
+patch release.
+
 Part of [amojs-dev/language-tools](https://github.com/amojs-dev/language-tools).
+Bugs and requests: [issues](https://github.com/amojs-dev/language-tools/issues).
