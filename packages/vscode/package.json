@@ -2,7 +2,7 @@
   "name": "amojs",
   "displayName": "AmoJS",
   "description": "HTML syntax highlighting and IntelliSense inside AmoJS html`` templates, plus build and eject commands.",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "publisher": "amojs-dev",
   "license": "MIT",
   "icon": "icon.png",
@@ -137,7 +137,7 @@
   },
   "comment:deps": "@amojs.dev/compiler is a devDependency, not a dependency, because esbuild BUNDLES it into dist/extension.js — the shipped .vsix carries no node_modules.",
   "devDependencies": {
-    "@amojs.dev/compiler": "^0.10.0"
+    "@amojs.dev/compiler": "^0.11.0"
   },
   "comment:vsce": "vsce is run through npx, not installed: it pulls keytar and vsce-sign, native modules that need build scripts and are only ever needed at release time."
 }

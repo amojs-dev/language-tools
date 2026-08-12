@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.0
+
+- Tracks `@amojs.dev/compiler@^0.11.0`, keeping the editor's parser the same
+  one `amo build` uses. The CLI grew `amo dev`, `amo serve`, TypeScript input
+  and `public/` root assets in this cycle; none of that changes what the
+  extension underlines, and all 25 extension tests pass unchanged against the
+  new compiler — the bump exists so the two cannot drift.
+
 ## 0.4.1
 
 - Fixes the listing itself. This README — which *is* the Marketplace page — still

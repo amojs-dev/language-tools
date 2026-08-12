@@ -33,13 +33,13 @@ importers:
   packages/vscode:
     devDependencies:
       '@amojs.dev/compiler':
-        specifier: ^0.10.0
-        version: 0.10.0
+        specifier: ^0.11.0
+        version: 0.11.0
 
 packages:
 
-  '@amojs.dev/compiler@0.10.0':
-    resolution: {integrity: sha512-6K6Xp4z9Khra6inVirMBVvY9osexAGGtOxjPDoINbccLsk8M7O0Pa9rOtBi/YoDrvtBvAPWICUILUWHcoyo03A==}
+  '@amojs.dev/compiler@0.11.0':
+    resolution: {integrity: sha512-/zQF2SscN+JqavHaRhvy744eWZb3rrlwZtt2kJ0uUw7gBgX1DxVIT1SiXRX95CYTuXYPNtfaqNfIm4G92W7z1w==}
     engines: {node: '>=22'}
 
   '@amojs.dev/core@0.8.1':
@@ -754,7 +754,7 @@ packages:
 
 snapshots:
 
-  '@amojs.dev/compiler@0.10.0':
+  '@amojs.dev/compiler@0.11.0':
     dependencies:
       '@amojs.dev/core': 0.8.1
       acorn: 8.18.0

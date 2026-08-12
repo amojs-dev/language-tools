@@ -9,3 +9,4 @@ allowBuilds:
 minimumReleaseAgeExclude:
   - "@amojs.dev/compiler@0.10.0"
   - "@amojs.dev/core@0.8.1"
+  - '@amojs.dev/compiler@0.11.0'

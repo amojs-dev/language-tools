@@ -86,10 +86,10 @@ templates.
   underlined and the message says "somewhere in this part" rather than pointing
   confidently at the wrong column.
 - **The bundled parser can differ from the one your project builds with.** The
-  extension carries its own copy of the AmoJS parser (currently
-  `@amojs.dev/compiler` 0.10), so if your project pins a different version, the
-  editor and `amo build` can in principle disagree. Resolving your project's own
-  installed parser first is the fix; it is not built yet.
+  extension carries its own copy of the AmoJS parser (the changelog names the
+  exact version each release tracks), so if your project pins a different one,
+  the editor and `amo build` can in principle disagree. Resolving your
+  project's own installed parser first is the fix; it is not built yet.
 - **A dynamic `` <title>${…}</title> `` is not flagged either way.** It compiles
   for the server target and is rejected for the browser one, and nothing in a
   file says which target it is built for — so the editor stays silent and lets
@@ -97,13 +97,12 @@ templates.
 
 ## Status
 
-Released. The extension bundles `@amojs.dev/compiler` 0.10 — the same parser
+Released. The extension bundles `@amojs.dev/compiler` — the same parser
 `amo build` runs — so the editor and the build agree by construction.
 
-AmoJS itself is **pre-1.0**:
-[`@amojs.dev/core`](https://www.npmjs.com/package/@amojs.dev/core) is at 0.8, so
-the template language can still change. When it does, this extension follows in a
-patch release.
+AmoJS itself is **pre-1.0**
+([`@amojs.dev/core`](https://www.npmjs.com/package/@amojs.dev/core)), so the
+template language can still change. When it does, this extension follows.
 
 Part of [amojs-dev/language-tools](https://github.com/amojs-dev/language-tools).
 Bugs and requests: [issues](https://github.com/amojs-dev/language-tools/issues).
