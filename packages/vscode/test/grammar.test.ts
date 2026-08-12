@@ -29,13 +29,19 @@ const HERE = import.meta.url.startsWith('file:')
 const OUR_SCOPE = 'inline.amojs.html';
 const OUR_GRAMMAR = join(HERE, '../syntaxes/amojs-html.injection.json');
 
-/** Where an installed editor keeps the grammars we embed. */
+/**
+ * Where an installed editor keeps the grammars we embed. CI has no editor, so
+ * AMOJS_EDITOR_EXTENSIONS points at a directory of the same shape holding the
+ * real files fetched from microsoft/vscode at a pinned tag (see ci.yml) —
+ * still the shipped grammars, not stand-ins.
+ */
 const CANDIDATES = [
+  process.env.AMOJS_EDITOR_EXTENSIONS,
   '/Applications/Cursor.app/Contents/Resources/app/extensions',
   '/Applications/Visual Studio Code.app/Contents/Resources/app/extensions',
   '/usr/share/code/resources/app/extensions',
   '/usr/lib/code/extensions',
-];
+].filter((p): p is string => Boolean(p));
 const editorBase = CANDIDATES.find(
   (p) => existsSync(join(p, 'javascript/syntaxes/JavaScript.tmLanguage.json')),
 );
