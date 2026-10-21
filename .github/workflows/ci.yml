@@ -42,13 +42,15 @@ jobs:
 
       # The grammar suite tokenizes against the REAL JavaScript and HTML
       # grammars. A runner has no editor installed, so fetch the same files
-      # VS Code ships, from its repo at a pinned tag.
+      # VS Code ships, from its repo at a pinned tag. Retried: a transient
+      # raw.githubusercontent.com failure once failed one matrix job before
+      # a single test had run.
       - name: Fetch VS Code grammars
         run: |
           mkdir -p .vscode-grammars/javascript/syntaxes .vscode-grammars/html/syntaxes
-          curl -fsSL -o .vscode-grammars/javascript/syntaxes/JavaScript.tmLanguage.json \
+          curl -fsSL --retry 5 --retry-all-errors --retry-delay 3 -o .vscode-grammars/javascript/syntaxes/JavaScript.tmLanguage.json \
             https://raw.githubusercontent.com/microsoft/vscode/1.100.0/extensions/javascript/syntaxes/JavaScript.tmLanguage.json
-          curl -fsSL -o .vscode-grammars/html/syntaxes/html.tmLanguage.json \
+          curl -fsSL --retry 5 --retry-all-errors --retry-delay 3 -o .vscode-grammars/html/syntaxes/html.tmLanguage.json \
             https://raw.githubusercontent.com/microsoft/vscode/1.100.0/extensions/html/syntaxes/html.tmLanguage.json
 
       # Grammar tests (real tokenizer, real grammars) + diagnostics tests
