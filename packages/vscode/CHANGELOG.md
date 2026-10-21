@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.6.1
+
+- **0.6.0 never activated.** The extension host threw `Cannot find module
+  './parser/htmlScanner'` on activation, so nothing in 0.6.0 ran — not the
+  new completion, not the diagnostics, not the commands. Cause: esbuild
+  resolved `vscode-html-languageservice` through its `main` field, the UMD
+  build, whose internal module loads happen at runtime and were not bundled.
+  The ESM build is bundled now (`--main-fields=module,main`). The `.vsix` had
+  been inspected for stray `require("…")` calls and showed none, because the
+  UMD wrapper calls `require` through a variable — inspection cannot catch
+  that, so the test suite now loads the built bundle in a node process
+  against a stubbed `vscode` module, activates it, and asks it for a
+  completion. The 0.6.0 notes below describe what 0.6.1 actually delivers.
+
 ## 0.6.0
 
 - **HTML completion inside templates — for real this time.** Tags, attributes,

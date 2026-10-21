@@ -2,7 +2,7 @@
   "name": "amojs",
   "displayName": "AmoJS",
   "description": "HTML syntax highlighting and IntelliSense inside AmoJS html`` templates, plus build and eject commands.",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "publisher": "amojs-dev",
   "license": "MIT",
   "icon": "icon.png",
@@ -137,7 +137,7 @@
     }
   },
   "scripts": {
-    "build": "esbuild src/extension.ts --bundle --platform=node --format=cjs --target=node20 --external:vscode --outfile=dist/extension.js",
+    "build": "esbuild src/extension.ts --bundle --platform=node --format=cjs --target=node20 --main-fields=module,main --external:vscode --outfile=dist/extension.js",
     "build:prod": "pnpm build --minify",
     "package": "pnpm build:prod && npx --yes @vscode/vsce package --no-dependencies",
     "release": "pnpm build:prod && npx --yes @vscode/vsce publish --no-dependencies"
