@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.6.0
+
+- **HTML completion inside templates — for real this time.** Tags, attributes,
+  attribute values and closing tags, from `vscode-html-languageservice`, the
+  library VS Code's own HTML support is built on, offered only in the static
+  parts of an AmoJS template and never inside a `${…}` hole. The 0.4.0 notes
+  and the listing claimed that registering the template as an embedded HTML
+  region already gave "tag and attribute completion, and Emmet". It did not:
+  `embeddedLanguages` hands the editor HTML's bracket and comment rules and
+  nothing else, and the built-in HTML completion runs on `.html` files only.
+  That sentence was never verified in an editor, and it is gone.
+- **TypeScript files now get diagnostics** — they never did. The compiler finds
+  templates with acorn, which reads JavaScript only, so one type annotation
+  silenced the whole file. Templates are now located lexically in the editor
+  (`.js` and `.ts` alike) and each is handed to the compiler's parser through
+  the new `diagnoseTemplate` entry, so the verdict is still the compiler's.
+  Tracks `@amojs.dev/compiler@^0.11.2` for that entry.
+- The template region is contributed as a non-string token type
+  (`tokenTypes`), so the editor's quick-suggestion rules for code, not the
+  ones for string literals, apply inside it.
+
 ## 0.5.0
 
 - Tracks `@amojs.dev/compiler@^0.11.0`, keeping the editor's parser the same

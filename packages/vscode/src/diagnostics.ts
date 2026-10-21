@@ -1,17 +1,15 @@
 /**
  * Template diagnostics — the squiggle.
  *
- * All judgement about what is legal comes from `diagnose()` in @amojs.dev/compiler.
- * This file owns only editor concerns: when to run, which documents to run on,
- * and turning offsets into `vscode.Range`. If it ever starts deciding what
- * counts as an error, the editor and the build have begun to disagree.
+ * All judgement about what is legal comes from `diagnoseTemplate()` in
+ * @amojs.dev/compiler, reached through `analysis.ts`. This file owns only
+ * editor concerns: when to run, which documents to run on, and turning offsets
+ * into `vscode.Range`. If it ever starts deciding what counts as an error, the
+ * editor and the build have begun to disagree.
  */
 
 import * as vscode from 'vscode';
-// the NARROW entry, not the package root: the root re-exports `build` and
-// `eject`, which reach for the filesystem and use import.meta. An editor needs
-// none of that, and bundling it dragged ~150KB of dead weight into the .vsix.
-import { diagnose } from '@amojs.dev/compiler/diagnose';
+import { analyzeText } from './analysis.js';
 
 /** Languages whose files can contain an AmoJS template. */
 const LANGUAGES = new Set([
@@ -89,11 +87,11 @@ function analyze(doc: vscode.TextDocument): vscode.Diagnostic[] {
 
   let found;
   try {
-    found = diagnose(text);
+    found = analyzeText(text);
   } catch {
-    /* diagnose() swallows unparseable input and returns [], so reaching here
-       means a genuine bug in it. Reporting nothing is right: an editor that
-       shows a crash as a code error would be blaming the wrong thing. */
+    /* the analysis never throws on user input — reaching here means a genuine
+       bug in it. Reporting nothing is right: an editor that shows a crash as a
+       code error would be blaming the wrong thing. */
     return [];
   }
 

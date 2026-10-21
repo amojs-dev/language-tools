@@ -33,13 +33,16 @@ importers:
   packages/vscode:
     devDependencies:
       '@amojs.dev/compiler':
-        specifier: ^0.11.0
-        version: 0.11.0
+        specifier: ^0.11.2
+        version: 0.11.2
+      vscode-html-languageservice:
+        specifier: 5.6.2
+        version: 5.6.2
 
 packages:
 
-  '@amojs.dev/compiler@0.11.0':
-    resolution: {integrity: sha512-/zQF2SscN+JqavHaRhvy744eWZb3rrlwZtt2kJ0uUw7gBgX1DxVIT1SiXRX95CYTuXYPNtfaqNfIm4G92W7z1w==}
+  '@amojs.dev/compiler@0.11.2':
+    resolution: {integrity: sha512-fkXsnYI3KP/wtMxJKRcTaCgFNFiHG7SQIi4q/0fQG1BWwNnS0Jl3RnmqARBGX74keDsYG5dypDkGLxMXgX1Ksw==}
     engines: {node: '>=22'}
 
   '@amojs.dev/core@0.8.1':
@@ -467,6 +470,9 @@ packages:
   '@vitest/utils@4.1.10':
     resolution: {integrity: sha512-fy9am/HWxbaGt/Sawrp90vt6Y6jQwf1RX77cz3uwoJwJVMli/e1IEwRPnMNJ7vKfPTwo0diXifkpPvwH9v7nGA==}
 
+  '@vscode/l10n@0.0.18':
+    resolution: {integrity: sha512-KYSIHVmslkaCDyw013pphY+d7x1qV8IZupYfeIfzNA+nsaWHbn5uPuQRvdRFsa9zFzGeudPuoGoZ1Op4jrJXIQ==}
+
   acorn@8.18.0:
     resolution: {integrity: sha512-lGq+9yr1/GuAWaVYIHRjvvySG5/4VfKIvC8EWxStPdcDh/Ka7FG3twP6v4d5BkravUilhIAsG4Qj83t02LWUPQ==}
     engines: {node: '>=0.4.0'}
@@ -741,11 +747,23 @@ packages:
       jsdom:
         optional: true
 
+  vscode-html-languageservice@5.6.2:
+    resolution: {integrity: sha512-ulCrSnFnfQ16YzvwnYUgEbUEl/ZG7u2eV27YhvLObSHKkb8fw1Z9cgsnUwjTEeDIdJDoTDTDpxuhQwoenoLNMg==}
+
+  vscode-languageserver-textdocument@1.0.15:
+    resolution: {integrity: sha512-Gsfr9S8LU3S6885cS+NaleasJ0n3V5y/SOTqHCifQiXWFw3G9w9/YItDfwHrlCz+dSZWWZ8ilYVMcJe7Sz7Sxw==}
+
+  vscode-languageserver-types@3.18.4:
+    resolution: {integrity: sha512-nQsacoiijvl0fRf2q28uFDrAVwRhdCa3QveiF7/CX0r18mLR5FU/1WskSsCKOjmEbtteKUnY8x8Yzxop+k0zwg==}
+
   vscode-oniguruma@2.0.1:
     resolution: {integrity: sha512-poJU8iHIWnC3vgphJnrLZyI3YdqRlR27xzqDmpPXYzA93R4Gk8z7T6oqDzDoHjoikA2aS82crdXFkjELCdJsjQ==}
 
   vscode-textmate@9.3.2:
     resolution: {integrity: sha512-n2uGbUcrjhUEBH16uGA0TvUfhWwliFZ1e3+pTjrkim1Mt7ydB41lV08aUvsi70OlzDWp6X7Bx3w/x3fAXIsN0Q==}
+
+  vscode-uri@3.2.0:
+    resolution: {integrity: sha512-m2gXo3bn0G1kT9InzMf07fTbqMbGtyckj3bH5ktLO+1Ssv+yiATZ4dhwaQv9UZWxJh6E9IFGnQyjgWVDWVBDrg==}
 
   why-is-node-running@2.3.0:
     resolution: {integrity: sha512-hUrmaWBdVDcxvYqnyh09zunKzROWjbZTiNy8dBEjkS7ehEDQibXJ7XvlmtbwuTclUiIyN+CyXQD4Vmko8fNm8w==}
@@ -754,7 +772,7 @@ packages:
 
 snapshots:
 
-  '@amojs.dev/compiler@0.11.0':
+  '@amojs.dev/compiler@0.11.2':
     dependencies:
       '@amojs.dev/core': 0.8.1
       acorn: 8.18.0
@@ -1005,6 +1023,8 @@ snapshots:
       convert-source-map: 2.0.0
       tinyrainbow: 3.1.1
 
+  '@vscode/l10n@0.0.18': {}
+
   acorn@8.18.0: {}
 
   assertion-error@2.0.1: {}
@@ -1231,9 +1251,22 @@ snapshots:
     transitivePeerDependencies:
       - msw
 
+  vscode-html-languageservice@5.6.2:
+    dependencies:
+      '@vscode/l10n': 0.0.18
+      vscode-languageserver-textdocument: 1.0.15
+      vscode-languageserver-types: 3.18.4
+      vscode-uri: 3.2.0
+
+  vscode-languageserver-textdocument@1.0.15: {}
+
+  vscode-languageserver-types@3.18.4: {}
+
   vscode-oniguruma@2.0.1: {}
 
   vscode-textmate@9.3.2: {}
+
+  vscode-uri@3.2.0: {}
 
   why-is-node-running@2.3.0:
     dependencies:

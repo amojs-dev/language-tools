@@ -22,22 +22,37 @@ const HERE = import.meta.url.startsWith('file:')
 
 const read = (rel: string) => readFile(join(HERE, '..', rel), 'utf8');
 
-test('diagnostics.ts delegates: it never decides what is legal itself', async () => {
-  const src = await read('src/diagnostics.ts');
+test('the analysis delegates: it never decides what is legal itself', async () => {
+  const analysis = await read('src/analysis.ts');
+  const diagnostics = await read('src/diagnostics.ts');
 
   // the one source of truth, imported through the narrow entry
-  expect(src).toContain("from '@amojs.dev/compiler/diagnose'");
+  expect(analysis).toContain("from '@amojs.dev/compiler/diagnose'");
+  expect(diagnostics).toContain("from './analysis.js'");
 
-  // no second opinion about template syntax living here
-  for (const smell of ['parseTemplate', 'unclosed', 'new RegExp', 'indexOf(\'<\')']) {
-    expect(src, `diagnostics.ts should not contain ${smell}`).not.toContain(smell);
+  // no second opinion about template syntax living here. templates.ts finds
+  // WHERE templates are (a lexical job); legality is never judged in this repo
+  for (const file of ['src/analysis.ts', 'src/diagnostics.ts', 'src/templates.ts', 'src/completion.ts']) {
+    const src = await read(file);
+    for (const smell of ['parseTemplate', 'unclosed', 'self-closing']) {
+      expect(src, `${file} should not contain ${smell}`).not.toContain(smell);
+    }
   }
 });
 
 test('the analysis import is the narrow entry, not the package root', async () => {
-  const src = await read('src/diagnostics.ts');
-  // the root pulls in build/eject — filesystem code an editor must not carry
-  expect(src).not.toContain("from '@amojs.dev/compiler'");
+  for (const file of ['src/analysis.ts', 'src/diagnostics.ts', 'src/templates.ts', 'src/completion.ts']) {
+    const src = await read(file);
+    // the root pulls in build/eject — filesystem code an editor must not carry
+    expect(src, file).not.toContain("from '@amojs.dev/compiler'");
+  }
+});
+
+test('analysis code imports nothing from vscode — it stays a pure function over text', async () => {
+  for (const file of ['src/analysis.ts', 'src/templates.ts']) {
+    const src = await read(file);
+    expect(src, file).not.toMatch(/from 'vscode'/);
+  }
 });
 
 test('stale problems cannot outlive a closed document', async () => {

@@ -4,7 +4,7 @@ Editor tooling for [AmoJS](https://github.com/amojs-dev/amojs).
 
 ```
 packages/
-  vscode/     the VS Code extension — Marketplace id `amojs`
+  vscode/     the VS Code extension — Marketplace id `amojs-dev.amojs`
 ```
 
 ## Why this is small
@@ -48,24 +48,29 @@ rewrite:
 
 1. **Analysis code imports nothing from `vscode`** — enforced by a test, not by
    discipline.
-2. **It wraps `@amojs.dev/compiler`; it never re-implements parsing.** Two tokenizers
-   that disagree is the worst outcome available — the editor calls a template
-   fine and the build fails, or the reverse.
+2. **It wraps `@amojs.dev/compiler`; it never re-implements the template parser.**
+   Two parsers that disagree is the worst outcome available — the editor calls
+   a template fine and the build fails, or the reverse. Finding *where* a
+   template literal sits is a lexical job and lives here (the compiler's own
+   detector is acorn, which reads JavaScript only, and TypeScript files need
+   the same treatment); whether its contents are legal is always the
+   compiler's verdict.
 
 ## Phases
 
 | | |
 |---|---|
-| **1** ✅ | Syntax highlighting inside `` html`` ``, embedded HTML/JS IntelliSense, snippets, build/eject commands. Zero coupling to AmoJS's code — it is a grammar. |
-| **2** | Inline diagnostics from AmoJS's own parser. Needs three small additions on the AmoJS side: structured errors carrying `{ part, offset }`, quasi source ranges, and one `diagnose()` entry point. |
-| **3** | Marketplace release. |
+| **1** ✅ | Syntax highlighting inside `` html`` `` (a grammar, zero coupling to AmoJS's code), snippets, build/eject commands. |
+| **2** ✅ | Inline diagnostics from AmoJS's own parser, through the compiler's `diagnose` entry — the editor and `amo build` share one parser. |
+| **3** ✅ | Published: VS Code Marketplace and Open VSX. |
+| **4** ✅ | HTML completion inside templates, and templates located lexically so `.ts` files get diagnostics and completion too. |
 
 ## Development
 
 ```bash
 pnpm install
 pnpm build     # bundle the extension with esbuild
-pnpm test      # tokenizer tests against the real JS + HTML grammars
+pnpm test      # grammar tests against the real JS + HTML grammars, plus scanner, analysis and completion
 pnpm check     # build, then typecheck
 ```
 
@@ -75,7 +80,7 @@ To try it in a real editor, open a window with the extension loaded:
 code --extensionDevelopmentPath="$PWD/packages/vscode" some-amo-project/
 ```
 
-Then open a `.js` file containing an `` html`` `` template.
+Then open a `.js` or `.ts` file containing an `` html`` `` template.
 
 ## License
 

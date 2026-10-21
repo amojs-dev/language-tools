@@ -15,10 +15,11 @@ const el = html`<button class=${cls} onclick=${() => count.value++}>
 </button>`;
 ```
 
-**Gives you HTML IntelliSense in there too** — tag and attribute completion, and
-Emmet — because the template contents are registered as an embedded HTML region.
-Holes are registered as embedded JavaScript, so completion works inside
-`class=${…}` as well, not only in element children.
+**Completes HTML in there too.** Tag names, attributes, attribute values and
+closing tags, from the same HTML language service VS Code's own `.html` support
+is built on — scoped to the static parts of an AmoJS template. Inside a `${…}`
+hole the extension stays out of the way, and the built-in JS/TS completion is
+what you get, as anywhere else in the file. (Emmet is not wired in.)
 
 **Snippets** for the whole API — type `amo` and pick: `amocomp`, `amosignal`,
 `amocomputed`, `amoeach`, `amoif`, `amoref`, `amoonmount`, `amocleanup`,
@@ -43,6 +44,12 @@ build cannot disagree.
 Files that do not import from `@amojs.dev/core` are left alone entirely, and
 JavaScript syntax errors are left to the built-in JS/TS support rather than
 reported twice.
+
+**TypeScript files get all of this too.** The compiler's own template detector
+reads JavaScript only, so the extension locates templates itself — lexically,
+the way a tokenizer would — in `.js` and `.ts` alike, and hands each one to the
+compiler's parser for the verdict. Finding a template is the editor's job;
+deciding whether it is legal never is.
 
 **Two commands** (Command Palette): **AmoJS: Build** and **AmoJS: Eject**. Both
 run the `amo` CLI as a task in your workspace folder.
@@ -74,9 +81,15 @@ templates.
 
 - **A foreign `` html`` `` is highlighted too.** A TextMate grammar cannot follow
   imports, so a lit-html template — or your own local `html` helper — gets the
-  same treatment. The AmoJS *compiler* is import-aware and unaffected; only the
-  colouring is generous. `obj.html`` ` is excluded, since a member expression is
-  never an AmoJS template.
+  same treatment. Diagnostics and completion are import-aware and unaffected;
+  only the colouring is generous. `obj.html`` ` is excluded, since a member
+  expression is never an AmoJS template.
+- **Templates are located without a parser.** Strings, comments, regex
+  literals and nested templates are skipped the way a tokenizer skips them,
+  and whether a `/` opens a regex is decided from the token before it — the
+  usual lexer rule, right in practice and wrong in constructions nobody
+  writes. JSX text is the known weak spot: an unbalanced quote in JSX content
+  can throw the scan off for the rest of that file.
 - **One error per template at a time.** The parser stops at its first failure,
   so a template with two problems shows the second only once the first is fixed.
   Separate templates are reported independently.
